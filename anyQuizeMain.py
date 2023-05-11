@@ -90,6 +90,8 @@ elif mode == "q":
         
         print("invalid input, not counting as correct or incorrect")
         if output != "stdout":
+            if os.path.exists(output):
+                os.remove(output)
             with open(output, "a") as f:
                 f.write(f"question number {total}".center(50, "-")+ "\n")
                 f.write(f"question:\t{question}\n")
