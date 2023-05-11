@@ -1,7 +1,10 @@
 import openai
 import os
 import logging
+
 import argparse
+
+
 
 # Argument parser
 
@@ -60,6 +63,7 @@ elif mode == "q":
             {"role": "system", "content": f"you make {number_of_questions} {difficulty} questions on the topic {topic} in this format: 'question1 \n question2 \n question3'"},
         ]
     )
+    print(f"topic: {topic}".center(50, "-")+ "\n")
     questions = message["choices"][0]["message"]["content"].split("\n")
     for i in range(len(questions)):
         if questions[i] != "":
