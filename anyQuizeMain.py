@@ -1,36 +1,47 @@
 import openai
 import os
+import logging
+import argparse
 
+# Argument parser
+
+parser = argparse.ArgumentParser(description="anyQuize")
+parser.add_argument("topic", type=str, help="the topic of the questions")
+parser.add_argument("--mode", "-m",default="q", type=str,choices=("q","f"), help="the mode of the questions, quiz or flashcard (q/f)")
+parser.add_argument("--number_of_questions","-n",default=5, type=int, help="the number of questions")
+parser.add_argument("--difficulty","-d", type=str, help="the difficulty of the questions")
+parser.add_argument("--model","-M",default="f",choices=("f","p"), type=str, help="the model to use, fast or precise (f/p)")
+args = parser.parse_args()
+
+
+# Logging
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+logger = logging.getLogger(__name__)
 
 # OpenAI API key
 
 openai.api_key = os.environ.get("OPENAI_API_KEY")
 
-topic = input("Enter a topic: ")
-mode = input("Enter the mode, quiz or flashcard (q/f): ")
-if mode != "q" and mode != "f":
-    print("Invalid input, using default mode")
-    mode = "q"
-number_of_questions = input("Enter the number of questions: ")
-difficulty = input("Enter the difficulty: ")
-model = input("Enter the model fast or precise (f/p): ")
+topic = args.topic
+mode = args.mode
+number_of_questions = args.number_of_questions
+difficulty = args.difficulty
+model = args.model
 
 if model == "f":
     model = "gpt-3.5-turbo"
 elif model == "p":
     model = "gpt-4"
-else:
-    print("Invalid input, using default model")
-    model = "gpt-3.5-turbo"
 if mode == "f":
+    print("setting up flashcards...")
     message = openai.ChatCompletion.create(
         model=model,
     messages=[
             {"role": "system", "content": f"you make {number_of_questions} {difficulty} questions on the topic {topic} in this format: '1: question1 \n A: answer1 \n 2: question2 \n A: answer2 '"},
         ]
     )
-
-    print('please wait for the model to respond...')
+    print("flashcards".center(50, "-"))
 
     print(message["choices"][0]["message"]["content"])
 elif mode == "q":
