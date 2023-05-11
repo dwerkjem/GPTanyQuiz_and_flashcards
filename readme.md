@@ -6,6 +6,7 @@ This script generates quizzes and flashcards based on a given topic using OpenAI
 
 - Python 3.x
 - OpenAI Python library
+- A paid account with open AI
 
 ## Installation
 
@@ -16,6 +17,8 @@ pip install openai
 ```
 
 2. Set your OpenAI API key as an environment variable:
+
+If you don't have one you can get one [here](https://platform.openai.com/account/billing/overview)
 
 ```bash
 export OPENAI_API_KEY=your_api_key_here
