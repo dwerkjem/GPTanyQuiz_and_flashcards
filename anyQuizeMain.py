@@ -11,7 +11,7 @@ parser.add_argument("--mode", "-m",default="q", type=str,choices=("q","f"), help
 parser.add_argument("--number_of_questions","-n",default=5, type=int, help="the number of questions")
 parser.add_argument("--difficulty","-d", type=str, help="the difficulty of the questions")
 parser.add_argument("--model","-M",default="f",choices=("f","p"), type=str, help="the model to use, fast or precise (f/p)")
-parser.add_argument("--output","-o",default="stdout", type=str, help="the output file") # not implemented yet
+parser.add_argument("--output","-o",default="stdout", type=str, help="the output file") 
 args = parser.parse_args()
 
 
@@ -89,16 +89,13 @@ elif mode == "q":
             total += 1
         
         print("invalid input, not counting as correct or incorrect")
-        if output != "stdout":
-            if os.path.exists(output):
-                os.remove(output)
-            with open(output, "a") as f:
-                f.write(f"question number {total}".center(50, "-")+ "\n")
-                f.write(f"question:\t{question}\n")
-                f.write(f"user:\t{user}\n")
-                f.write(f"answer:\t{res}\n")
-                f.write(f"correct:\t{correct}\n")
-                f.write("\n")
+        with open(output, "a") as f:
+            f.write(f"question number {total}".center(50, "-")+ "\n")
+            f.write(f"question:\t{question}\n")
+            f.write(f"user:\t{user}\n")
+            f.write(f"answer:\t{res}\n")
+            f.write(f"correct:\t{correct}\n")
+            f.write("\n")
 
     print("results".center(50, "-"))
     print(f"you got {score} out of {total} correct or {score/total*100}%")
