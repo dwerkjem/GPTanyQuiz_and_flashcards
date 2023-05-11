@@ -1,12 +1,21 @@
 from PyQt5.QtWidgets import *
 import sys
 from PyQt5.QtCore import Qt
+from quizAndFlash import quiz
 
 class settingsMenu(QMainWindow):
     def __init__(self):
         super().__init__()
         self.init_ui()
 
+    def continueButton(self):
+        mode = self.combo2.currentText()
+        print(mode)
+        self.close()
+        self.quiz = quiz()
+        if mode == "Quiz":
+            self.quiz.show()
+            
     def init_ui(self):
         self.setWindowTitle("Settings")
 
@@ -74,12 +83,12 @@ class settingsMenu(QMainWindow):
 
         label5 = QLabel("Mode", self)
 
-        combo2 = QComboBox(self)
-        combo2.addItem("Flashcards")
-        combo2.addItem("Quiz")
+        self.combo2 = QComboBox(self)
+        self.combo2.addItem("Flashcards")
+        self.combo2.addItem("Quiz")
 
         layout5.addWidget(label5)
-        layout5.addWidget(combo2)
+        layout5.addWidget(self.combo2)
 
         vLayout.addLayout(layout5)
 
@@ -92,56 +101,32 @@ class settingsMenu(QMainWindow):
 
         layout6.addWidget(label6)
         layout6.addWidget(input4)
-        
+
         vLayout.addLayout(layout6)
+        
+        layout7 = QHBoxLayout()
+
+        button = QPushButton("Continue", self)
+        button.clicked.connect(self.continueButton)
+        button.resize(100, 50)
+
+        layout7.addWidget(button)
+
+        vLayout.addLayout(layout7)
+        
 
         central_layout = QVBoxLayout(central_widget)
         central_layout.addWidget(container_widget)
         self.setCentralWidget(central_widget)
-
-class MainWindow(QMainWindow):
-    def __init__(self):
-        super().__init__()
-
-        self.init_ui()
-
-    def init_ui(self):
-        self.setWindowTitle("My PyQt5 App")
-
-        central_widget = QWidget(self)
-        layout = QVBoxLayout(central_widget)
-        
-        self.question = QLabel(self)
-        self.text_edit_input = QTextEdit(self)
-        self.text_edit_output = QLabel(self)
-
-        process_button = QPushButton("Process Text", self)
-        process_button.clicked.connect(self.process_text)
-
-        layout.addWidget(self.question)
-        layout.addWidget(self.text_edit_input)
-        layout.addWidget(process_button)
-        layout.addWidget(self.text_edit_output)
-        self.setCentralWidget(central_widget)
-
-
-    def process_text(self):
-        input_text = self.text_edit_input.toPlainText()
-        # Perform any processing on the input_text here
-        output_text = input_text.upper()  # For example, convert the text to uppercase
-        self.text_edit_output.setText(output_text)
-
-
+    
 if __name__ == '__main__':
     # make corners round
     app = QApplication(sys.argv)
-    main_window = MainWindow()
     settings = settingsMenu()
     
     # show settings menu
     settings.setGeometry(100, 100, 500, 500)
     settings.setFixedSize(500, 500)
     settings.show()
-    
     
     sys.exit(app.exec_())
