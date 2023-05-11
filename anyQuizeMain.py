@@ -11,6 +11,7 @@ parser.add_argument("--mode", "-m",default="q", type=str,choices=("q","f"), help
 parser.add_argument("--number_of_questions","-n",default=5, type=int, help="the number of questions")
 parser.add_argument("--difficulty","-d", type=str, help="the difficulty of the questions")
 parser.add_argument("--model","-M",default="f",choices=("f","p"), type=str, help="the model to use, fast or precise (f/p)")
+parser.add_argument("--output","-o",default="stdout", type=str, help="the output file") # not implemented yet
 args = parser.parse_args()
 
 
@@ -28,6 +29,7 @@ mode = args.mode
 number_of_questions = args.number_of_questions
 difficulty = args.difficulty
 model = args.model
+output = args.output
 
 if model == "f":
     model = "gpt-3.5-turbo"
@@ -43,7 +45,11 @@ if mode == "f":
     )
     print("flashcards".center(50, "-"))
 
-    print(message["choices"][0]["message"]["content"])
+    if output == "stdout":
+        print(message["choices"][0]["message"]["content"])
+    else:
+        with open(output, "w") as f:
+            f.write(message["choices"][0]["message"]["content"])
 elif mode == "q":
     score = 0
     total = 0
@@ -61,6 +67,8 @@ elif mode == "q":
         else:
             questions[i] = questions[i].strip()
     for question in questions:
+        if question == "":
+            continue
         print("question".center(50, "-"))
         print(question)
         user = input("Enter the answer: ")
@@ -71,14 +79,25 @@ elif mode == "q":
         ]
         )
         print("answer".center(50, "-"))
-        print(new["choices"][0]["message"]["content"])
+        res = (new["choices"][0]["message"]["content"])
+        print(res)
         correct = input("did you answer correctly? (y/n): ")
         if correct == "y":
             score += 1
             total += 1
         elif correct == "n":
             total += 1
-        else:
-            print("invalid input, not counting as correct or incorrect")
+        
+        print("invalid input, not counting as correct or incorrect")
+        if output != "stdout":
+            with open(output, "a") as f:
+                f.write(f"question number {total}".center(50, "-")+ "\n")
+                f.write(f"question:\t{question}\n")
+                f.write(f"user:\t{user}\n")
+                f.write(f"answer:\t{res}\n")
+                f.write(f"correct:\t{correct}\n")
+                f.write("\n")
+
     print("results".center(50, "-"))
     print(f"you got {score} out of {total} correct or {score/total*100}%")
+    
