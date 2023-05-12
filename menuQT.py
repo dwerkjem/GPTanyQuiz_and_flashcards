@@ -10,11 +10,29 @@ class settingsMenu(QMainWindow):
 
     def continueButton(self):
         mode = self.combo2.currentText()
-        print(mode)
+        if self.combo.currentText() == "Fast":
+            model = "gpt-3.5-turbo"
+        else:
+            model = "gpt-4"
+        
+        difficulty = self.input2.text()
+        
+        number_of_questions = self.number_of_questions_input.text()
+        if number_of_questions == "":
+            number_of_questions = 5
+        
+        out  = self.input4.text()
+        
+        topic = self.input3.text()
+        if topic == "":
+            topic = "general"
         self.close()
-        self.quiz = quiz()
+        self.quiz = quiz(mode=mode, model=model, difficulty=difficulty,
+                        numQuestions=number_of_questions, topic=topic, out=out )
         if mode == "Quiz":
             self.quiz.show()
+        else:
+            pass
             
     def init_ui(self):
         self.setWindowTitle("Settings")
@@ -50,32 +68,32 @@ class settingsMenu(QMainWindow):
         layout2 = QHBoxLayout()
         label2 = QLabel("Difficulty:", self)
         
-        input2 = QLineEdit(self)
-        input2.setText("Hard")
+        self.input2 = QLineEdit(self)
+        self.input2.setText("Hard")
 
         layout2.addWidget(label2)
-        layout2.addWidget(input2)
+        layout2.addWidget(self.input2)
         vLayout.addLayout(layout2)
 
         layout3 = QHBoxLayout()
         label3 = QLabel("Category:", self)
 
-        input3 = QLineEdit(self)
-        input3.setText("Anything!")
+        self.input3 = QLineEdit(self)
+        self.input3.setText("Anything!")
 
         layout3.addWidget(label3)
-        layout3.addWidget(input3)
+        layout3.addWidget(self.input3)
         vLayout.addLayout(layout3) 
 
         layout4 = QHBoxLayout()  
         label4 = QLabel("Model:", self)
 
-        combo = QComboBox(self)
-        combo.addItem("Fast")
-        combo.addItem("Precise")
+        self.combo = QComboBox(self)
+        self.combo.addItem("Fast")
+        self.combo.addItem("Precise")
 
         layout4.addWidget(label4)
-        layout4.addWidget(combo)
+        layout4.addWidget(self.combo)
 
         vLayout.addLayout(layout4) 
 
@@ -96,11 +114,11 @@ class settingsMenu(QMainWindow):
 
         label6 = QLabel("Output", self)
 
-        input4 = QLineEdit(self)
-        input4.setText("")
+        self.input4 = QLineEdit(self)
+        self.input4.setText("")
 
         layout6.addWidget(label6)
-        layout6.addWidget(input4)
+        layout6.addWidget(self.input4)
 
         vLayout.addLayout(layout6)
         
